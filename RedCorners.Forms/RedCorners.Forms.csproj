@@ -10,11 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.6.0.220655" />
+    <None Remove="gradienth.png" />
+    <None Remove="gradienth2.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RedCorners\RedCorners.csproj" />
+    <EmbeddedResource Include="gradienth.png" />
+    <EmbeddedResource Include="gradienth2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RedCorners" Version="4.0.0" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.220655" />
   </ItemGroup>
 
 </Project>

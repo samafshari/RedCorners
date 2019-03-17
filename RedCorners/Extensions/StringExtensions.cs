@@ -25,6 +25,18 @@ namespace RedCorners
             return results;
         }
 
+        public static string RemoveDuplicateTags(this string input, bool humanFormatted = false, string separator = ",")
+        {
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            if (humanFormatted) separator += " ";
+            var result = new HashSet<string>();
+            foreach (var category in input.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                result.Add(category.Trim().CapitalizeFirstLetter());
+            }
+            return string.Join(separator, result);
+        }
+
         public static string RemovePrefix(this string s, string prefix)
         {
             if (string.IsNullOrWhiteSpace(s)) return null;
@@ -54,5 +66,22 @@ namespace RedCorners
                 return s.ToUpper();
             return s.Remove(1).ToUpper() + s.Substring(1);
         }
+
+        public static string ToFileNameHash(this string original)
+        {
+            original = original.ToUpper();
+            string result = "";
+            for (int i = 0; i < original.Length; i++)
+            {
+                if (original[i] >= 'A' && original[i] <= 'Z')
+                    result += original[i];
+                else
+                    result += '_';
+            }
+            if (result.Length > 20) result = result.Substring(0, 20);
+            return result;
+        }
+
+
     }
 }
