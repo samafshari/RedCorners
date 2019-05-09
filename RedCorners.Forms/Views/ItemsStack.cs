@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -78,9 +79,9 @@ namespace RedCorners.Forms.Views
                     ObservableSource = new ObservableCollection<object>(ItemsSource.Cast<object>());
                 }
             }
-            catch (Exception x)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine($"ItemsStack SetItems fail: {ex}");
             }
         }
 

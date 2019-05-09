@@ -1,6 +1,8 @@
-﻿using System;
+﻿using RedCorners.Demo.Models;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using RedCorners.Forms;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace RedCorners.Demo
@@ -12,6 +14,13 @@ namespace RedCorners.Demo
             InitializeComponent();
 
             MainPage = new MainPage();
+
+            LooseMessages.Ping.Subscribe<string>(this, (message) =>
+            {
+                Console.WriteLine(message);
+            });
+
+            LooseMessages.Ping.Send("Hello, World!");
         }
 
         protected override void OnStart()
