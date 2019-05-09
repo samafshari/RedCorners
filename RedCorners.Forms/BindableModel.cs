@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using RedCorners.Models;
+using Xamarin.Forms;
 
 #if WINDOWS
 using System.Windows;
@@ -17,12 +18,16 @@ namespace RedCorners
 
     public partial class BindableModel : INotifyPropertyChanged
     {
+        protected readonly static Random Random = new Random();
+        public virtual bool IsModal { get; set; } = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string m = null) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(m));
         public void RaisePropertyChanged([CallerMemberName] string m = null) =>
             OnPropertyChanged(m);
+
+        public event EventHandler<string> OnLog;
 
         public virtual bool IsBusy
         {
@@ -48,17 +53,13 @@ namespace RedCorners
             get => _status;
             set
             {
-                _status = value;
+                var hasChanged = _status != value;
+                if (hasChanged)
+                    _status = value;
                 if (_status == TaskStatuses.Success)
                     _isFirstTime = false;
-                RaisePropertyChanged();
-                RaisePropertyChanged(nameof(IsBusy));
-                RaisePropertyChanged(nameof(IsFailed));
-                RaisePropertyChanged(nameof(IsNotFailed));
-                RaisePropertyChanged(nameof(IsFinished));
-                RaisePropertyChanged(nameof(IsNotFinished));
-                RaisePropertyChanged(nameof(IsFirstTime));
-                RaisePropertyChanged(nameof(IsIdle));
+                if (hasChanged)
+                    UpdateProperties(true);
             }
         }
 
@@ -66,14 +67,7 @@ namespace RedCorners
         public void ResetFirstTime()
         {
             _isFirstTime = true;
-            RaisePropertyChanged(nameof(IsBusy));
-            RaisePropertyChanged(nameof(IsFailed));
-            RaisePropertyChanged(nameof(IsNotFailed));
-            RaisePropertyChanged(nameof(IsFinished));
-            RaisePropertyChanged(nameof(IsFirstTime));
-            RaisePropertyChanged(nameof(IsNotFinished));
-            RaisePropertyChanged(nameof(IsIdle));
-            RaisePropertyChanged(nameof(Status));
+            UpdateProperties();
         }
 
 
@@ -85,6 +79,11 @@ namespace RedCorners
         public virtual void Refresh()
         {
 
+        }
+
+        public void Log(string message = null, [CallerMemberName] string method = null)
+        {
+            OnLog?.Invoke(this, $"[{method}] {message ?? "(null)"}");
         }
 
         public BindableModel() { }
@@ -124,6 +123,85 @@ namespace RedCorners
                 foreach (var item in names)
                     RaisePropertyChanged(item);
             });
+        }
+
+        public const string DefaultLoadingText = "Loading...";
+
+        string _loadingText = DefaultLoadingText;
+
+        public virtual string LoadingText
+        {
+            get => _loadingText;
+            set
+            {
+                SetProperty(ref _loadingText, value);
+#if WINDOWS
+                RaisePropertyChanged(nameof(IsBusyVisibility));
+#endif
+            }
+        }
+
+        public const string DefaultErrorText = "Something went wrong";
+        string _errorText = DefaultErrorText;
+        [ManualUpdate]
+        public virtual string ErrorText
+        {
+            get => _errorText;
+            set
+            {
+                _errorText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public virtual Command RefreshCommand => new Command(Refresh);
+
+        public virtual Command GoBackCommand => new Command(() =>
+        {
+#if __MOBILE__
+            App.Instance.RunOnUI(() => OnBack());
+#endif
+        });
+
+        protected bool backed = false;
+        public virtual bool OnBack()
+        {
+            if (backed) return true;
+            backed = true;
+            return OnBackSuccessful();
+        }
+
+        public virtual bool OnBackSuccessful()
+        {
+#if __MOBILE__
+            if (IsModal)
+            {
+                App.Instance.PopModal();
+            }
+            else App.Instance.ShowFirstPage();
+#endif
+            return true;
+        }
+
+        public virtual void OnAppeared(ContentPage page)
+        {
+
+        }
+
+        /// <summary>
+        /// Call from the View to activate the view model
+        /// </summary>
+        public virtual void Start()
+        {
+            backed = false;
+        }
+
+        /// <summary>
+        /// Call from the view to deactivate the view model
+        /// </summary>
+        public virtual void Stop()
+        {
+
         }
     }
 
