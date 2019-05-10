@@ -11,10 +11,10 @@ namespace RedCorners.Forms.Views
         bool parentWasNull = true;
         WeakReference<AliveContentPage> pagePointer = null;
 
-        public bool FixPadding
+        public bool FixTopPadding
         {
-            get => (bool)GetValue(FixPaddingProperty);
-            set => SetValue(FixPaddingProperty, value);
+            get => (bool)GetValue(FixTopPaddingProperty);
+            set => SetValue(FixTopPaddingProperty, value);
         }
 
         public bool FixBottomPadding
@@ -26,8 +26,8 @@ namespace RedCorners.Forms.Views
         bool isPaddingFixed;
         Thickness originalPadding;
 
-        public static BindableProperty FixPaddingProperty = BindableProperty.Create(
-            nameof(FixPadding),
+        public static BindableProperty FixTopPaddingProperty = BindableProperty.Create(
+            nameof(FixTopPadding),
             typeof(bool),
             typeof(AliveContentView),
             false,
@@ -50,7 +50,7 @@ namespace RedCorners.Forms.Views
 
         void AdjustPadding()
         {
-            if (FixPadding)
+            if (FixTopPadding)
             {
                 if (!isPaddingFixed)
                 {
