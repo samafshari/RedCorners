@@ -10,18 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="gradienth.png" />
-    <None Remove="gradienth2.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="gradienth.png" />
-    <EmbeddedResource Include="gradienth2.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="RedCorners" Version="4.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.6.0.344457" />
   </ItemGroup>
+
+  <Import Project="..\RedCorners.Forms.Shared\RedCorners.Forms.Shared.projitems" Label="Shared" />
 
 </Project>

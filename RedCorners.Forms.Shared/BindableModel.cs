@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using RedCorners.Models;
 using Xamarin.Forms;
+using RedCorners.Forms;
 
 #if WINDOWS
 using System.Windows;
@@ -70,12 +71,6 @@ namespace RedCorners
             UpdateProperties();
         }
 
-
-#if WINDOWS
-        public Visibility IsBusyVisibility =>
-            IsBusy ? Visibility.Visible : Visibility.Collapsed;
-#endif
-
         public virtual void Refresh()
         {
 
@@ -96,11 +91,7 @@ namespace RedCorners
 
         public void UpdateProperties(bool forceAll = false)
         {
-#if WINDOWS
-            System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(() =>
-#else
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-#endif
             {
                 foreach (var item in GetType().GetProperties())
                 {
@@ -114,11 +105,7 @@ namespace RedCorners
 
         public void UpdateProperties(IEnumerable<string> names)
         {
-#if WINDOWS
-            System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(() =>
-#else
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-#endif
             {
                 foreach (var item in names)
                     RaisePropertyChanged(item);
@@ -135,9 +122,6 @@ namespace RedCorners
             set
             {
                 SetProperty(ref _loadingText, value);
-#if WINDOWS
-                RaisePropertyChanged(nameof(IsBusyVisibility));
-#endif
             }
         }
 
@@ -158,9 +142,7 @@ namespace RedCorners
 
         public virtual Command GoBackCommand => new Command(() =>
         {
-#if __MOBILE__
-            App.Instance.RunOnUI(() => OnBack());
-#endif
+            Signals.RunOnUI.Send<Action>(() => OnBack());
         });
 
         protected bool backed = false;
@@ -173,13 +155,11 @@ namespace RedCorners
 
         public virtual bool OnBackSuccessful()
         {
-#if __MOBILE__
             if (IsModal)
             {
-                App.Instance.PopModal();
+                Signals.PopModal.Send();
             }
-            else App.Instance.ShowFirstPage();
-#endif
+            else Signals.ShowFirstPage.Send();
             return true;
         }
 
@@ -204,29 +184,4 @@ namespace RedCorners
 
         }
     }
-
-#if WINDOWS
-    public class Command : System.Windows.Input.ICommand
-    {
-        private Action _action;
-        private bool _canExecute;
-        public Command(Action action, bool canExecute = true)
-        {
-            _action = action;
-            _canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute;
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        public void Execute(object parameter)
-        {
-            _action();
-        }
-    }
-#endif
 }

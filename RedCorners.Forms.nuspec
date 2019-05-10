@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>RedCorners.Forms</id>
-    <version>4.3.0</version>
+    <version>4.4.0</version>
     <title>RedCorners.Forms</title>
     <authors>Saeed Afshari and NeatCapital OÜ</authors>
     <owners>NeatCapital OÜ</owners>
@@ -27,9 +27,17 @@
   <files>
     <file src="license.txt" target="" />
 
-    <file 
+	<file 
       src="RedCorners.Forms\bin\Release\netstandard2.0\RedCorners.Forms.dll" 
-      target="lib\netstandard2.0\RedCorners.Forms.dll" />
+      target="lib\win\RedCorners.Forms.dll" />
+	  
+	<file 
+      src="RedCorners.Forms\bin\Release\netstandard2.0\RedCorners.Forms.dll" 
+      target="lib\MonoAndroid80\RedCorners.Forms.dll" />
+	  
+    <file 
+      src="RedCorners.Forms.iOS\bin\Release\RedCorners.Forms.dll" 
+      target="lib\Xamarin.iOS10\RedCorners.Forms.dll" />
   </files>
 
 </package>
