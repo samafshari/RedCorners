@@ -21,6 +21,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\LogExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\MessagingExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Signals.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PageCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PopCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Systems\LogSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Systems\MessagingSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Systems\NotchSystem.cs" />

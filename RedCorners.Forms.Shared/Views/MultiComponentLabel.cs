@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Text;
 using Xamarin.Forms;
 
-namespace RedCorners.Forms.Views
+namespace RedCorners.Forms
 {
     public class MultiComponentLabel : Label
     {

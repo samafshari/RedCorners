@@ -150,11 +150,18 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.6.0.344457" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\RedCorners.Demo\RedCorners.Demo.csproj">
-      <Project>{08F1FA7D-B35F-4A5B-B539-03806BB926E5}</Project>
-      <Name>RedCorners.Demo</Name>
+    <ProjectReference Include="..\..\RedCorners.Forms.iOS\RedCorners.Forms.iOS.csproj">
+      <Project>{f6a648b4-ed87-437f-8f6e-54aba4f9b2c7}</Project>
+      <Name>RedCorners.Forms.iOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RedCorners\RedCorners.csproj">
+      <Project>{ca17bb7a-7885-4d83-aa23-19086f199850}</Project>
+      <Name>RedCorners</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\RedCorners.Demo.Shared\RedCorners.Demo.Shared.projitems" Label="Shared" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

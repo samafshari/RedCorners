@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rf:AliveContentPage 
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:RedCorners.Demo"
+    xmlns:rf="clr-namespace:RedCorners.Forms;assembly=RedCorners.Forms"
+    x:Class="RedCorners.Demo.Views.MainPage">
+
+    <StackLayout>
+        <Button Text="Show Modal">
+            <Button.Command>
+                <rf:PageCommand IsModal="True">
+                    <rf:AliveContentPage>
+                        <Grid>
+                            <Button Text="Pop" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Button.Command>
+                                    <rf:PopCommand />
+                                </Button.Command>
+                            </Button>
+                        </Grid>
+                    </rf:AliveContentPage>
+                </rf:PageCommand>
+            </Button.Command>
+        </Button>
+    </StackLayout>
+
+</rf:AliveContentPage>

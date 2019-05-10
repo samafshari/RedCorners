@@ -4,7 +4,7 @@ using System.Text;
 using Xamarin.Forms;
 using System.Reflection;
 
-namespace RedCorners.Forms.Views
+namespace RedCorners.Forms
 {
     public class HorizontalShadowView : Image
     {

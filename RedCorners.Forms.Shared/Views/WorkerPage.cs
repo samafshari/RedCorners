@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace RedCorners.Forms.Views
+namespace RedCorners.Forms
 {
     public class WorkerPage : ContentPage
     {

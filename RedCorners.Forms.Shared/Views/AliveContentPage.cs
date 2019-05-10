@@ -6,7 +6,7 @@ using Xamarin.Forms;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace RedCorners.Forms.Views
+namespace RedCorners.Forms
 {
     public class AliveContentPage : ContentPage
     {

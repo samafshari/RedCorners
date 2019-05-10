@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 #pragma warning disable CS0618
 
-namespace RedCorners.Forms.Views
+namespace RedCorners.Forms
 {
     public partial class ItemsStack : StackLayout
     {

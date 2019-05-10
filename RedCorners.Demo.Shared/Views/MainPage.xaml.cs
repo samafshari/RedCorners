@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace RedCorners.Demo
+namespace RedCorners.Demo.Views
 {
     public partial class MainPage
     {

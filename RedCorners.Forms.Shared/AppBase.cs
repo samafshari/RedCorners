@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using RedCorners.Forms.Views;
+using RedCorners.Forms;
 using RedCorners.Forms.Systems;
 using System.Threading.Tasks;
 using Xamarin.Forms;
