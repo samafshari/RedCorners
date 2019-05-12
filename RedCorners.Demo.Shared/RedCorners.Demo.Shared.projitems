@@ -6,7 +6,7 @@
     <SharedGUID>d84026c6-df66-4204-8f27-8c778625ea9c</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>RedCorners.Demo.Shared</Import_RootNamespace>
+    <Import_RootNamespace>RedCorners.Demo</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -14,6 +14,10 @@
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\LooseMessages.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CounterViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\CounterPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
@@ -28,5 +32,16 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\CounterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="E:\Projects\RedCorners\RedCorners.Demo.Shared\Views\CounterPage.xaml.cs">
+      <DependentUpon>CounterPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

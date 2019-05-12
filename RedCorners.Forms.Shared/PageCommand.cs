@@ -15,10 +15,16 @@ namespace RedCorners.Forms
         {
         }
 
-        bool ICommand.CanExecute(object parameter) => Page != null;
+        bool ICommand.CanExecute(object parameter) => Page != null || PageType != null;
 
         void ICommand.Execute(object parameter)
         {
+            if (PageType != null)
+            {
+                _page = Activator.CreateInstance(PageType) as Page;
+                if (Page == null)
+                    throw new Exception("PageType did not construct a Page!");
+            }
             if (IsModal) Signals.ShowModalPage.Send(Page);
             else Signals.ShowPage.Send(Page);
         }
@@ -29,7 +35,26 @@ namespace RedCorners.Forms
             get => _page;
             set
             {
+                if (_pageType != null)
+                    throw new Exception("Cannot set Page when PageType is set.");
+
                 _page = value;
+                CanExecuteChanged?.Invoke(this, null);
+            }
+        }
+
+        Type _pageType;
+        public Type PageType
+        {
+            get => _pageType;
+            set
+            {
+                if (value != null)
+                {
+                    _page = null;
+                }
+
+                _pageType = value;
                 CanExecuteChanged?.Invoke(this, null);
             }
         }
