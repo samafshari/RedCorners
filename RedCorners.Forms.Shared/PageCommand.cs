@@ -7,7 +7,7 @@ using Xamarin.Forms;
 namespace RedCorners.Forms
 {
     [ContentProperty("Page")]
-    public class PageCommand : ICommand
+    public class PageCommand : BindableObject, ICommand
     {
         public event EventHandler CanExecuteChanged;
 
@@ -21,7 +21,7 @@ namespace RedCorners.Forms
         {
             if (PageType != null)
             {
-                _page = Activator.CreateInstance(PageType) as Page;
+                Page = Activator.CreateInstance(PageType) as Page;
                 if (Page == null)
                     throw new Exception("PageType did not construct a Page!");
             }
@@ -29,44 +29,55 @@ namespace RedCorners.Forms
             else Signals.ShowPage.Send(Page);
         }
 
-        Page _page;
+        public static BindableProperty PageProperty = BindableProperty.Create(
+            nameof(Page),
+            typeof(Page),
+            typeof(PageCommand),
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: (bindable, oldVal, newVal) =>
+            {
+                if (bindable is PageCommand command)
+                {
+                    command.CanExecuteChanged?.Invoke(command, null);
+                }
+            });
+
         public Page Page
         {
-            get => _page;
-            set
-            {
-                if (_pageType != null)
-                    throw new Exception("Cannot set Page when PageType is set.");
-
-                _page = value;
-                CanExecuteChanged?.Invoke(this, null);
-            }
+            get => (Page)GetValue(PageProperty);
+            set => SetValue(PageProperty, value);
         }
 
-        Type _pageType;
+        public static BindableProperty PageTypeProperty = BindableProperty.Create(
+            nameof(PageType),
+            typeof(Type),
+            typeof(PageCommand),
+            defaultBindingMode: BindingMode.TwoWay,
+            propertyChanged: (bindable, oldVal, newVal) =>
+            {
+                if (bindable is PageCommand command)
+                {
+                    command.CanExecuteChanged?.Invoke(command, null);
+                }
+            });
+
         public Type PageType
         {
-            get => _pageType;
-            set
-            {
-                if (value != null)
-                {
-                    _page = null;
-                }
-
-                _pageType = value;
-                CanExecuteChanged?.Invoke(this, null);
-            }
+            get => (Type)GetValue(PageTypeProperty);
+            set => SetValue(PageTypeProperty, value);
         }
 
-        bool _isModal = true;
+        public static BindableProperty IsModalProperty = BindableProperty.Create(
+            nameof(IsModal),
+            typeof(bool),
+            typeof(PageCommand),
+            defaultValue: true,
+            defaultBindingMode: BindingMode.TwoWay);
+
         public bool IsModal
         {
-            get => _isModal;
-            set
-            {
-                _isModal = value;
-            }
+            get => (bool)GetValue(IsModalProperty);
+            set => SetValue(IsModalProperty, value);
         }
     }
 }
