@@ -45,6 +45,7 @@ namespace RedCorners.Forms
             if (executed && FireOnce) return;
             if (!FireOnce && FireDelay > 0 && (DateTimeOffset.Now - lastFire).TotalMilliseconds < FireDelay) return;
             executed = true;
+            CanExecuteChanged?.Invoke(this, null);
             lastFire = DateTimeOffset.Now;
             Signals.PopModal.Send();
         }
