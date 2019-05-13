@@ -7,7 +7,7 @@ namespace RedCorners.Components
 {
     public class Benchmark
     {
-        Stopwatch watch = new Stopwatch();
+        readonly Stopwatch watch = new Stopwatch();
 
         public Benchmark()
         {

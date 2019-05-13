@@ -37,7 +37,7 @@ namespace RedCorners
 
         public static T ReturnAs<T>(this object me) where T : new()
         {
-            if (me == null) return default(T);
+            if (me == null) return default;
             T instance = new T();
             me.Inject(instance);
             return instance;

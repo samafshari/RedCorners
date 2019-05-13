@@ -42,11 +42,24 @@ namespace RedCorners.Forms
                 });
                 component.PropertyChanged -= OnComponentPropertyChanged;
                 component.PropertyChanged += OnComponentPropertyChanged;
+                component.BindingContext = BindingContext;
             }
 
             FormattedText = formattedString;
         }
+
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+
+            if (Components == null) return;
+            foreach (var component in Components)
+            {
+                component.BindingContext = BindingContext;
+            }
+        }
     }
+
     public class TextComponent : BindableObject
     {
         public static readonly BindableProperty TextProperty =

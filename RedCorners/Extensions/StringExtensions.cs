@@ -67,7 +67,7 @@ namespace RedCorners
             return s.Remove(1).ToUpper() + s.Substring(1);
         }
 
-        public static string ToFileNameHash(this string original)
+        public static string ToFileNameHash(this string original, int maxLength = 20)
         {
             original = original.ToUpper();
             string result = "";
@@ -78,10 +78,8 @@ namespace RedCorners
                 else
                     result += '_';
             }
-            if (result.Length > 20) result = result.Substring(0, 20);
+            if (result.Length > maxLength) result = result.Substring(0, maxLength);
             return result;
         }
-
-
     }
 }
