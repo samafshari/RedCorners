@@ -1,12 +1,15 @@
 # RedCorners
+
 RedCorners brings some neat utilities to your C# projects.
 
 NuGet: [https://github.com/saeedafshari/RedCorners](https://github.com/saeedafshari/RedCorners)
 
 ## Dependencies
+
 RedCorners depends on `Newtonsoft.Json` for JSON serialization and deserialization.
 
 ## Extensions
+
 RedCorners offers a number of extension methods to boost productivity. All extensions are under the `RedCorners` namespace:
 ```c#
 using RedCorners;
@@ -15,6 +18,7 @@ using RedCorners;
 ### String Manipulation
 
 #### string string.ToBase32()
+
 This method converts an input string into a Base32 form, where the output characters are chosen from: `QAZ2WSX3EDC4RFV5TGB6YHN7UJM8K9LP`, all of which are valid keyboard characters. Example:
 ```c#
 string input = "Hello, World!";
@@ -24,6 +28,7 @@ Console.WriteLine($"Base32: {base32}");
 ```
 
 #### string string.Head(int take = 20)
+
 This method returns the first `take=20` characters of a non-null string. If the original input has less of equal to `take` characters, the original string is returned, otherwise the output contains the first `take` characters from the input, followed by `...`, making it a `take+3` characters output.
 
 In case the input is `null`, an empty string is returned.
@@ -37,6 +42,7 @@ Console.WriteLine($"Hello, World! This is a very long text.".Head(100));
 ```
 
 #### HashSet<string> string.Hashtags()
+
 This method takes a string as an input, and returns a `HashSet<string>` containing the hashtags mentioned in the input. If the input is `null`, an empty `HashSet<string>` is returned.
 
 Hashtags are converted to LowerInvariant forms.
@@ -50,6 +56,7 @@ Console.WriteLine($"Hashtags: {string.Join(" ", hashtags)}");
 ```
 
 #### string string.RemoveDuplicateTags(...)
+
 ```
 string.RemoveDuplicateTags(bool humanFormatted = false, string separator = ",")
 ```
@@ -63,6 +70,7 @@ Console.WriteLine("food, Drinks, FooD,fun".RemoveDuplicateTags(true));
 ```
 
 #### string string.RemovePrefix(string prefix)
+
 This method returns a string without the specified `prefix`. If the input is `null`, `null` is returned. Examples:
 ```c#
 Console.WriteLine("Hello, World!".RemovePrefix("Hello"));
@@ -72,6 +80,7 @@ Console.WriteLine("Hello, World!".RemovePrefix("Foo"));
 ```
 
 #### bool string.IsNW()
+
 This is a shortcut for `string.IsNullOrWhiteSpace(string)`. Example:
 ```c#
 Assert(!"Hello".IsNW())
@@ -79,6 +88,7 @@ Assert("".IsNW())
 ```
 
 #### bool string.HasValue()
+
 This is a shortcut for `!string.IsNullOrWhiteSpace(string)`. Example:
 ```c#
 Assert("Hello".IsNW())
@@ -86,9 +96,11 @@ Assert(!"".IsNW())
 ```
 
 #### string string.CapitalizeFirstLetter()
+
 This method returns a copy of the input string, where its first letter is capitalized. It does not trim the input. If the input is `null`, it returns `null`.
 
 #### bool string.IsValidEmail()
+
 This method returns `true` if the input is a valid email address. It relies on `System.Net.Mail.MailAddress`.  Example:
 ```c#
 Assert("foo@hotmail.com");
@@ -98,6 +110,7 @@ Assert(!"not an email address");
 ### I/O Extensions
 
 #### string string.CreateDirectoryAndReturn()
+
 This method takes a path as its input, creates that path if it doesn't exist, and returns the input. It is useful when chained with other I/O actions. Example:
 ```c#
 this.FilePath = Path
@@ -108,6 +121,7 @@ this.FilePath = Path
 ### Date/Time Extensions
 
 #### DateTime long.DateFromEpochMs()
+
 This method returns a UTC DateTime equivalent to the input `long` in milliseconds. Example:
 ```c#
 long epoch = 1557738320000;
@@ -116,12 +130,15 @@ Console.WriteLine(epoch.DateFromEpochMs());
 ```
 
 #### long DateTime.ToEpochMs()
+
 This method is the opposite of `long.DateFromEpochMs()`, where it converts a `DateTime` to epoch milliseconds, as `long`.
 
 #### int DateTime.ToWeekNumber()
+
 This method returns the week number for the input `DateTime`, relative to `2019-03-11`.
 
 #### DateTime int.GetFirstDayOfWeek()
+
 This method returns the DateTime for the first day of the input week number. Example:
 ```c#
 DateTime input = DateTime.UtcNow;
@@ -138,15 +155,18 @@ Console.WriteLine(weekNumber.GetFirstDayOfWeek());
 ```
 
 #### DateTime int.GetLastDayOfWeek()
+
 This method returns the DateTime for the first day of the next week. Identical to:
 ```c#
 (weeknumber + 1).GetFirstDayOfWeek();
 ```
 
 ### Injection Extensions
+
 RedCorners provides extensions that facilitate converting data where models have different base classes, but share some properties.
 
 #### void Inject(object destination)
+
 This method looks at the properties of the `destination` object, and where there is an identical property in the source, it copies the value of the source to that property of the destination. Example:
 ```c#
 class Contact
@@ -186,6 +206,7 @@ Console.WriteLine(original.Name);
 ```
 
 #### T object.ReturnAs<T>() where T : new()
+
 This method injects an object to a new object of type `T` and returns the new `T`. Example:
 ```c#
 Contact contact = update.ReturnAs<Contact>();
@@ -198,12 +219,15 @@ Console.WriteLine(original.Name);
 ```
 
 #### List<T> IEnumerable<object>.ReturnAsList<T>() : where T : new()
+
 This method returns a list of objects of type `T` from an arbitrary list of objects of any type, by doing one-by-one `Inject`s.
 
 ## Components
+
 Components are under the `RedCorners.Components` namespace.
 
 ### Benchmark
+
 `RedCorners.Components.Benchmark` is using a `Stopwatch` to time some actions. Example:
 
 ```c#
@@ -217,15 +241,19 @@ Console.WriteLine(benchmark.StopToString());
 ```
 
 #### TimeSpan Benchmark.Stop()
+
 Stops the timer and returns the duration as a `TimeSpan`.
 
 #### string Benchmark.ToString()
+
 Returns the duration as a string with two decimal points and the `s` prefix. Does not stop the timer, and can be used multiple times.
 
 #### string Benchmark.StopToString()
+
 Same as `ToString()`, but stops the timer.
 
 ### ObjectStorage<T> where T : class, new()
+
 This class helps with storage of serializable objects of type `T` as JSON files. The storage path is defined by the `static` property `DefaultBasePath` and by default, it is set to:
 ```c#
 public static Func<string> DefaultBasePath = () => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
