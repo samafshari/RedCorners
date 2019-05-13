@@ -15,6 +15,9 @@ namespace RedCorners.Demo
 
             base.InitializeSystems();
 
+            string input = "Hello #World #Everybody!";
+            var hashtags = input.Hashtags();
+
             LooseMessages.Ping.Subscribe<string>(this, (message) =>
             {
                 Console.WriteLine(message);

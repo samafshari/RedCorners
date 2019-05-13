@@ -28,18 +28,18 @@ namespace RedCorners
         public static string RemoveDuplicateTags(this string input, bool humanFormatted = false, string separator = ",")
         {
             if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-            if (humanFormatted) separator += " ";
             var result = new HashSet<string>();
             foreach (var category in input.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries))
             {
-                result.Add(category.Trim().CapitalizeFirstLetter());
+                result.Add(category.Trim().ToLowerInvariant());
             }
+            if (humanFormatted) separator += " ";
             return string.Join(separator, result);
         }
 
         public static string RemovePrefix(this string s, string prefix)
         {
-            if (string.IsNullOrWhiteSpace(s)) return null;
+            if (s == null) return null;
             if (!s.StartsWith(prefix)) return s;
             var prefixLength = prefix.Length;
             return s.Substring(prefixLength, s.Length - prefixLength);

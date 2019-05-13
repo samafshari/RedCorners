@@ -9,7 +9,7 @@ namespace RedCorners.Components
 {
     public class ObjectStorage<T> where T : class, new()
     {
-        public static Func<string> DefaultBasePath => () => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        public static Func<string> DefaultBasePath = () => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static Action<string> DefaultLogAction = (message) => Console.WriteLine(message);
 
         public Action<string> LogAction = null;
