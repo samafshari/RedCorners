@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using RedCorners;
 using RedCorners.Components;
@@ -7,18 +8,26 @@ namespace RedCorners.Demo.Core
 {
     class Program
     {
-        static void Main(string[] args)
+        public class Settings
         {
-            WorkAsync().GetAwaiter().GetResult();
+            public int Count { get; set; }
         }
 
-        static async Task WorkAsync()
+        static void Main(string[] args)
         {
-            Benchmark benchmark = new Benchmark();
-            await Task.Delay(1234);
-            Console.WriteLine(benchmark.ToString());
-            await Task.Delay(4321);
-            Console.WriteLine(benchmark.StopToString());
+            var settings = new ObjectStorage<Settings>();
+            Console.WriteLine($"Default Count: {settings.Data.Count}");
+
+            settings.Data.Count++;
+            settings.Save();
+
+            var configuration = new Dictionary<string, object>
+            {
+                { "Count", 1000 }
+            };
+
+            configuration.Inject(settings.Data);
+            Console.WriteLine($"New Count: {settings.Data.Count}");
         }
     }
 }

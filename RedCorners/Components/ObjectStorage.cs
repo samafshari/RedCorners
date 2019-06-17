@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace RedCorners.Components
     public class ObjectStorage<T> where T : class, new()
     {
         public static Func<string> DefaultBasePath = () => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        public static Action<string> DefaultLogAction = (message) => Console.WriteLine(message);
+        public static Action<string> DefaultLogAction = (message) => Debug.WriteLine(message);
 
         public Action<string> LogAction = null;
         public void Log(string message)
@@ -69,7 +70,7 @@ namespace RedCorners.Components
         readonly object saveLock = new object();
 
         volatile bool isSaving = false;
-        public void Save()
+        public void SaveAsync()
         {
             Task.Run(async () =>
             {
@@ -78,17 +79,22 @@ namespace RedCorners.Components
                 try
                 {
                     await Task.Delay(TimeSpan.FromSeconds(1)); //Buffer writes
-                    lock (saveLock)
-                    {
-                        var json = JsonConvert.SerializeObject(Data);
-                        File.WriteAllText(FilePath, json);
-                    }
+                    Save();
                 }
                 finally
                 {
                     isSaving = false;
                 }
             });
+        }
+
+        public void Save()
+        {
+            lock (saveLock)
+            {
+                var json = JsonConvert.SerializeObject(Data);
+                File.WriteAllText(FilePath, json);
+            }
         }
     }
 }
