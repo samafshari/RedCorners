@@ -35,7 +35,7 @@ namespace RedCorners
             }
         }
 
-        public static void Inject<V>(this Dictionary<string, V> configuration, object destination) 
+        public static void Inject(this IDictionary<string, object> configuration, object destination) 
         {
             var destProps = destination.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             foreach (var item in configuration.Keys)
