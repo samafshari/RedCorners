@@ -217,12 +217,3 @@ Returns the duration as a string with two decimal points and the `s` prefix. Doe
 #### string Benchmark.StopToString()
 
 Same as `ToString()`, but stops the timer.
-
-### ObjectStorage<T> where T : class, new()
-
-This class helps with storage of serializable objects of type `T` as JSON files. The storage path is defined by the `static` property `DefaultBasePath` and by default, it is set to:
-```c#
-public static Func<string> DefaultBasePath = () => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-```
-
-This component is currently experimental and more information will be published on it in later updates.

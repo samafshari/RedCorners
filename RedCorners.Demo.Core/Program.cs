@@ -15,19 +15,16 @@ namespace RedCorners.Demo.Core
 
         static void Main(string[] args)
         {
-            var settings = new ObjectStorage<Settings>();
-            Console.WriteLine($"Default Count: {settings.Data.Count}");
-
-            settings.Data.Count++;
-            settings.Save();
+            var settings = new Settings();
+            Console.WriteLine($"Default Count: {settings.Count}");
 
             var configuration = new Dictionary<string, object>
             {
                 { "Count", 1000 }
             };
 
-            configuration.Inject(settings.Data);
-            Console.WriteLine($"New Count: {settings.Data.Count}");
+            configuration.InjectDictionary(settings);
+            Console.WriteLine($"New Count: {settings.Count}");
         }
     }
 }

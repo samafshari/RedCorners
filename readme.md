@@ -168,6 +168,7 @@ RedCorners provides extensions that facilitate converting data where models have
 #### void Inject(object destination)
 
 This method looks at the properties of the `destination` object, and where there is an identical property in the source, it copies the value of the source to that property of the destination. Example:
+
 ```c#
 class Contact
 {
@@ -203,6 +204,31 @@ Console.WriteLine(original.Id);
 
 Console.WriteLine(original.Name);
 // Prints [Sarah], because it was injected from the UpdateContactModel
+```
+
+#### void IDictionary<string, object>.InjectDictionary(object destination) 
+
+This method injects a dictionary with Property names as Keys into the destination object. Example:
+
+```c#
+public class Settings
+{
+	public int Count { get; set; }
+}
+
+static void Main(string[] args)
+{
+	var settings = new Settings();
+	Console.WriteLine($"Default Count: {settings.Count}"); // Prints 0
+
+	var configuration = new Dictionary<string, object>
+	{
+		{ "Count", 1000 }
+	};
+
+	configuration.InjectDictionary(settings);
+	Console.WriteLine($"New Count: {settings.Count}"); // Prints 1000
+}
 ```
 
 #### T object.ReturnAs<T>() where T : new()
@@ -251,12 +277,3 @@ Returns the duration as a string with two decimal points and the `s` prefix. Doe
 #### string Benchmark.StopToString()
 
 Same as `ToString()`, but stops the timer.
-
-### ObjectStorage<T> where T : class, new()
-
-This class helps with storage of serializable objects of type `T` as JSON files. The storage path is defined by the `static` property `DefaultBasePath` and by default, it is set to:
-```c#
-public static Func<string> DefaultBasePath = () => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-```
-
-This component is currently experimental and more information will be published on it in later updates.
