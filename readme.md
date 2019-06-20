@@ -2,11 +2,8 @@
 
 RedCorners brings some neat utilities to your C# projects.
 
-NuGet: [https://github.com/saeedafshari/RedCorners](https://github.com/saeedafshari/RedCorners)
-
-## Dependencies
-
-RedCorners depends on `Newtonsoft.Json` for JSON serialization and deserialization.
+NuGet: [https://www.nuget.org/packages/RedCorners](https://www.nuget.org/packages/RedCorners)
+GitHub: [https://github.com/saeedafshari/RedCorners](https://github.com/saeedafshari/RedCorners)
 
 ## Extensions
 
