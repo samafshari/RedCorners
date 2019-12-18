@@ -2,7 +2,7 @@
 
 RedCorners brings some neat utilities to your C# projects.
 
-For more documentation, visit [https://github.com/saeedafshari/RedCorners](https://github.com/saeedafshari/RedCorners)
+For more documentation, visit [https://redcorners.com/core/](https://redcorners.com/core/)
 
 ## Extensions
 
