@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>false</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>RedCorners.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 </Project>
