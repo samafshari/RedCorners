@@ -25,6 +25,10 @@ namespace RedCorners.Demo.Core
 
             configuration.InjectDictionary(settings);
             Console.WriteLine($"New Count: {settings.Count}");
+
+            var dic = configuration.Export(ExportMode.AllButIgnored);
+            foreach (var item in dic)
+                Console.WriteLine($"{item.Key}: {item.Value}");
         }
     }
 }

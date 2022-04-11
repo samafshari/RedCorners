@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>RedCorners</id>
-    <version>8.0.0</version>
+    <version>9.0.0</version>
     <title>RedCorners</title>
     <authors>NeatCapital OÜ</authors>
     <owners>NeatCapital OÜ</owners>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>RedCorners brings some neat utilities to your C# projects.</description>
     <releaseNotes>RedCorners brings some neat utilities to your C# projects.</releaseNotes>
-    <copyright>Copyright 2019-2020 NeatCapital OÜ</copyright>
+    <copyright>Copyright 2019-2022 NeatCapital OÜ</copyright>
     <tags>Xamarin Xamarin.Forms iOS Android Serialization Mobile</tags>
 
     <dependencies>
@@ -19,11 +19,11 @@
       </group>
     </dependencies>
 
-    <license type="file">LICENSE.txt</license>
+    <license type="file">license.txt</license>
   </metadata>
 
   <files>
-    <file src="LICENSE.txt" target="" />
+    <file src="license.txt" target="" />
 	<file src="redcorners_logo.png" target="" />
     <file 
       src="RedCorners\bin\Release\netstandard2.0\RedCorners.dll" 
