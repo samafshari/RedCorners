@@ -108,7 +108,7 @@ namespace RedCorners
             var results = new Dictionary<string, string>();
             prefix = prefix ?? string.Empty;
             foreach (var format in formats)
-                results[format] = prefix + date.ToString(format);
+                results[$"{prefix}{format}"] = date.ToString(format);
             return results;
         }
 
@@ -117,7 +117,7 @@ namespace RedCorners
             var results = new Dictionary<string, string>();
             prefix = prefix ?? string.Empty;
             foreach (var format in formats)
-                results[format] = prefix + date.ToString(format);
+                results[$"{prefix}{format}"] = date.ToString(format);
             return results;
         }
     }
