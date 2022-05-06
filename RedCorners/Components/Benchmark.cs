@@ -5,8 +5,10 @@ using System.Text;
 
 namespace RedCorners.Components
 {
-    public class Benchmark
+    public class Benchmark : IDisposable
     {
+        public event EventHandler<TimeSpan> Stopped;
+
         readonly Stopwatch watch = new Stopwatch();
 
         public Benchmark()
@@ -14,15 +16,22 @@ namespace RedCorners.Components
             watch.Start();
         }
 
+        public void Dispose()
+        {
+            Stop();
+        }
+
         public TimeSpan Stop()
         {
+            if (!watch.IsRunning) return watch.Elapsed;
             watch.Stop();
+            Stopped?.Invoke(this, watch.Elapsed);
             return watch.Elapsed;
         }
 
         public string StopToString()
         {
-            watch.Stop();
+            Stop();
             return ToString();
         }
 
