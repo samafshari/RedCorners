@@ -8,20 +8,22 @@ namespace RedCorners.Components
     public class Benchmark : IDisposable
     {
         public event EventHandler<TimeSpan> Stopped;
+        
+        public TimeSpan Elapsed => watch.Elapsed;
 
-        readonly Stopwatch watch = new Stopwatch();
+        protected readonly Stopwatch watch = new Stopwatch();
 
         public Benchmark()
         {
             watch.Start();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Stop();
         }
 
-        public TimeSpan Stop()
+        public virtual TimeSpan Stop()
         {
             if (!watch.IsRunning) return watch.Elapsed;
             watch.Stop();
@@ -29,7 +31,7 @@ namespace RedCorners.Components
             return watch.Elapsed;
         }
 
-        public string StopToString()
+        public virtual string StopToString()
         {
             Stop();
             return ToString();

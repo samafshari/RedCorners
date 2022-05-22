@@ -5,63 +5,107 @@ using System.Linq;
 
 namespace RedCorners
 {
+
     [AttributeUsage(AttributeTargets.All)]
-    public class IgnoreInject : Attribute
+    public class IgnoreInjectAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.All)]
-    public class Export : Attribute
+    public class ProjectAttribute : Attribute
     {
     }
 
     [AttributeUsage(AttributeTargets.All)]
-    public class IgnoreExport : Attribute
+    public class IgnoreProjectAttribute : Attribute
     {
     }
 
-    public enum ExportMode
+    [AttributeUsage(AttributeTargets.All)]
+    public class ForceCacheAttribute : Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.All)]
+    public class ForceAvoidCacheAttribute : Attribute
+    {
+    }
+
+    public enum ProjectMode
     {
         AllButIgnored,
-        Exportables
+        Explicit
     }
 
     public static class InjectExtensions
     {
-        public static void Inject(this object me, object destination)
+        static readonly Dictionary<Type, PropertyInfo[]> properties = new Dictionary<Type, PropertyInfo[]>();
+        static readonly Dictionary<(Type t, Type a), bool> attributes = new Dictionary<(Type t, Type a), bool>();
+        static readonly Dictionary<(PropertyInfo p, Type a), bool> propAttributes = new Dictionary<(PropertyInfo p, Type a), bool>();
+
+        public static bool CacheProperties = false;
+
+        static bool HasCustomAttributes(Type type, Type attribute)
         {
-            var destProps = destination.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            var myProps = me.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (!attributes.ContainsKey((type, attribute)))
+                return attributes[(type, attribute)] = type.GetCustomAttributes(attribute, true).Any();
+            return attributes[(type, attribute)];
+        }
+
+        static bool HasCustomAttributes(PropertyInfo prop, Type attribute)
+        {
+            if (!propAttributes.ContainsKey((prop, attribute)))
+                return propAttributes[(prop, attribute)] = prop.GetCustomAttributes(attribute, true).Any();
+            return propAttributes[(prop, attribute)];
+        }
+
+        static PropertyInfo[] GetProperties(Type type, bool? useCache)
+        {
+            var c = useCache ?? CacheProperties;
+            if (HasCustomAttributes(type, typeof(ForceCacheAttribute)))
+                c = true;
+            if (HasCustomAttributes(type, typeof(ForceAvoidCacheAttribute)))
+                c = false;
+            if (!c || !properties.ContainsKey(type))
+                return properties[type] = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return properties[type];
+        }
+
+        public static void Inject(this object me, object destination, bool? cacheSrc = null, bool? cacheDst = null, Action<Exception> exceptionHandler = null)
+        {
+            var destProps = GetProperties(destination.GetType(), cacheDst);
+            var myProps = GetProperties(me.GetType(), cacheSrc);
             foreach (var item in myProps)
             {
-                if (item.GetCustomAttributes(typeof(IgnoreInject), true).Any())
+                if (HasCustomAttributes(item, typeof(IgnoreInjectAttribute)))
                     continue;
                 var matchingFields = from x in destProps where x.Name == item.Name select x;
-                if (matchingFields.Count() == 0) continue;
+                if (!matchingFields.Any()) continue;
                 try
                 {
                     matchingFields.First().SetValue(destination, item.GetValue(me));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    exceptionHandler?.Invoke(ex);
                 }
             }
         }
 
-        public static void InjectDictionary(this IDictionary<string, object> configuration, object destination)
+        public static void InjectDictionary(this IDictionary<string, object> configuration, object destination, bool? cache = null, Action<Exception> exceptionHandler = null)
         {
-            var destProps = destination.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var destProps = GetProperties(destination.GetType(), cache);
             foreach (var item in configuration.Keys)
             {
                 var matchingFields = from x in destProps where x.Name == item select x;
-                if (matchingFields.Count() == 0) continue;
+                if (!matchingFields.Any()) continue;
                 try
                 {
                     matchingFields.First().SetValue(destination, configuration[item]);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    exceptionHandler?.Invoke(ex);
                 }
             }
         }
@@ -77,27 +121,28 @@ namespace RedCorners
         public static List<T> ReturnAsList<T>(this IEnumerable<object> mes) where T : new()
         {
             if (mes == null) return null;
-            if (mes.Count() == 0) return new List<T>();
+            if (!mes.Any()) return new List<T>();
             return mes.Select(x => x.ReturnAs<T>()).ToList();
         }
 
-        public static Dictionary<string, object> Export(this object me, ExportMode mode)
+        public static Dictionary<string, object> ProjectAsDictionary(this object me, ProjectMode mode = ProjectMode.AllButIgnored, bool? cache = null, Action<Exception> exceptionHandler = null)
         {
             var results = new Dictionary<string, object>();
-            var myProps = me.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var myProps = GetProperties(me.GetType(), cache);
             foreach (var item in myProps)
             {
-                if (item.GetCustomAttributes(typeof(IgnoreExport), true).Any())
+                if (item.GetCustomAttributes(typeof(IgnoreProjectAttribute), true).Any())
                     continue;
-                if (mode == ExportMode.Exportables && !item.GetCustomAttributes(typeof(Export), true).Any())
+                if (mode == ProjectMode.Explicit && !item.GetCustomAttributes(typeof(ProjectAttribute), true).Any())
                     continue;
 
                 try
                 {
                     results[item.Name] = item.GetValue(me);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    exceptionHandler?.Invoke(ex);
                 }
             }
             return results;
