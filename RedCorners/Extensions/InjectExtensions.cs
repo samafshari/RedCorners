@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Collections.Concurrent;
 
 namespace RedCorners
 {
@@ -39,9 +40,9 @@ namespace RedCorners
 
     public static class InjectExtensions
     {
-        static readonly Dictionary<Type, PropertyInfo[]> properties = new Dictionary<Type, PropertyInfo[]>();
-        static readonly Dictionary<(Type t, Type a), bool> attributes = new Dictionary<(Type t, Type a), bool>();
-        static readonly Dictionary<(PropertyInfo p, Type a), bool> propAttributes = new Dictionary<(PropertyInfo p, Type a), bool>();
+        static readonly ConcurrentDictionary<Type, PropertyInfo[]> properties = new ConcurrentDictionary<Type, PropertyInfo[]>();
+        static readonly ConcurrentDictionary<(Type t, Type a), bool> attributes = new ConcurrentDictionary<(Type t, Type a), bool>();
+        static readonly ConcurrentDictionary<(PropertyInfo p, Type a), bool> propAttributes = new ConcurrentDictionary<(PropertyInfo p, Type a), bool>();
 
         public static bool CacheProperties = false;
 
