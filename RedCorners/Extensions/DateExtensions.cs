@@ -9,31 +9,31 @@ namespace RedCorners
 {
     public static class DateExtensions
     {
-        public static DateTimeOffset GetDayStartUniversalTime(TimeZoneInfo tz, DateTimeOffset? reference = null)
+        public static DateTimeOffset GetDayStartUniversalTime(this TimeZoneInfo tz, DateTimeOffset? reference = null)
         {
             var utc = reference ?? DateTimeOffset.Now;
             return GetDayStartUniversalTime(tz, GetLocalTime(tz, utc));
         }
 
-        public static DateTime GetLocalTime(TimeZoneInfo tz, DateTimeOffset utc)
+        public static DateTime GetLocalTime(this TimeZoneInfo tz, DateTimeOffset utc)
         {
             return TimeZoneInfo.ConvertTimeFromUtc(utc.UtcDateTime, tz);
         }
 
-        public static DateTimeOffset GetUniversalTime(TimeZoneInfo tz, DateTime local)
+        public static DateTimeOffset GetUniversalTime(this TimeZoneInfo tz, DateTime local)
         {
             return TimeZoneInfo.ConvertTimeToUtc(new DateTime(
                 year: local.Year, month: local.Month, day: local.Day,
                 hour: local.Hour, minute: local.Minute, second: local.Second), tz);
         }
 
-        public static DateTimeOffset GetDayStartUniversalTime(TimeZoneInfo tz, DateTime dt)
+        public static DateTimeOffset GetDayStartUniversalTime(this TimeZoneInfo tz, DateTime dt)
         {
             var offset = tz.GetUtcOffset(dt);
             return new DateTimeOffset(year: dt.Year, month: dt.Month, day: dt.Day, hour: 0, minute: 0, second: 0, millisecond: 0, offset);
         }
 
-        public static DateTime GetDateInTimeZone(TimeZoneInfo tz, DateTime dt)
+        public static DateTime GetDateInTimeZone(this TimeZoneInfo tz, DateTime dt)
         {
             var dto = GetDayStartUniversalTime(tz, dt);
             return dto.Date;
@@ -96,7 +96,7 @@ namespace RedCorners
             return totalHours + ts.ToString("'h'mm");
         }
 
-        public static DateTimeOffset GetPreviousDay(TimeZoneInfo tz, DateTimeOffset dt)
+        public static DateTimeOffset GetPreviousDay(this TimeZoneInfo tz, DateTimeOffset dt)
         {
             var local = GetLocalTime(tz, dt);
             var yesterday = local.AddDays(-1);
@@ -104,7 +104,7 @@ namespace RedCorners
             return utc;
         }
 
-        public static DateTimeOffset GetNextDay(TimeZoneInfo tz, DateTimeOffset dt)
+        public static DateTimeOffset GetNextDay(this TimeZoneInfo tz, DateTimeOffset dt)
         {
             var local = GetLocalTime(tz, dt);
             var yesterday = local.AddDays(1);
@@ -112,13 +112,32 @@ namespace RedCorners
             return utc;
         }
 
-        public static DateTimeOffset GetBeginningOfMonth(TimeZoneInfo tz, DateTimeOffset dt)
+        public static DateTimeOffset GetBeginningOfMonth(this TimeZoneInfo tz, DateTimeOffset dt)
         {
             var nowInFirstDay = dt.AddDays(1 - dt.Day);
             return GetDayStartUniversalTime(tz, nowInFirstDay);
         }
 
-        public static DateTimeOffset GetPreviousDayOfWeek(DateTimeOffset dt, DayOfWeek targetDayOfWeek, bool includeToday = true)
+        public static DateTimeOffset GetPreviousDayOfWeek(this TimeZoneInfo tz, DateTimeOffset utc, DayOfWeek targetDayOfWeek, bool includeToday = true)
+        {
+            var dt = GetLocalTime(tz, utc);
+            if (dt.DayOfWeek == targetDayOfWeek)
+                return includeToday ? utc : utc.AddDays(-7);
+            var dow = dt.DayOfWeek;
+            if (dow < targetDayOfWeek) dow += 7;
+            var delta = dow - targetDayOfWeek;
+            return utc.AddDays(-delta);
+        }
+
+        public static DateTimeOffset GetNextDayOfWeek(this TimeZoneInfo tz, DateTimeOffset utc, DayOfWeek targetDayOfWeek, bool includeToday = true)
+        {
+            var dt = GetLocalTime(tz, utc);
+            if (dt.DayOfWeek == targetDayOfWeek)
+                return includeToday ? utc : utc.AddDays(7);
+            return GetPreviousDayOfWeek(tz, utc.AddDays(7), targetDayOfWeek, includeToday);
+        }
+
+        public static DateTime GetPreviousDayOfWeek(this DateTime dt, DayOfWeek targetDayOfWeek, bool includeToday = true)
         {
             if (dt.DayOfWeek == targetDayOfWeek)
                 return includeToday ? dt : dt.AddDays(-7);
@@ -128,7 +147,7 @@ namespace RedCorners
             return dt.AddDays(-delta);
         }
 
-        public static DateTimeOffset GetNextDayOfWeek(DateTimeOffset dt, DayOfWeek targetDayOfWeek, bool includeToday = true)
+        public static DateTime GetNextDayOfWeek(this DateTime dt, DayOfWeek targetDayOfWeek, bool includeToday = true)
         {
             if (dt.DayOfWeek == targetDayOfWeek)
                 return includeToday ? dt : dt.AddDays(7);
@@ -160,7 +179,7 @@ namespace RedCorners
         {
             var utc = reference ?? DateTimeOffset.Now;
             var utcEnd = TimeZoneInfo.ConvertTime(utc, tz);
-            var utcStart = GetPreviousDayOfWeek(utcEnd, firstDayOfWeek);
+            var utcStart = GetPreviousDayOfWeek(tz, utcEnd, firstDayOfWeek);
             if (!endIsRef) utcEnd = utcStart.AddDays(7);
             if (!inclusiveEnd) utcEnd = utcEnd.AddTicks(-1);
             var range = new Interval<DateTimeOffset>(utcStart, utcEnd);
@@ -170,14 +189,14 @@ namespace RedCorners
         public static Interval<DateTimeOffset> GetCalendarWeeksViewRange(this TimeZoneInfo tz, DayOfWeek firstDayOfWeek, int weeksSkip, int weeksTake, DateTimeOffset? reference = null)
         {
             var utc = reference ?? DateTimeOffset.Now;
-            var weekStart = GetPreviousDayOfWeek(utc, firstDayOfWeek);
+            var weekStart = GetPreviousDayOfWeek(tz, utc, firstDayOfWeek);
             if (weeksSkip != 0)
                 weekStart = weekStart.AddDays(7 * weeksSkip);
             var end = weekStart.AddDays(7 * weeksTake).AddTicks(-1);
             return new Interval<DateTimeOffset>(weekStart, end);
         }
 
-        public static string GetDateString(DateTime dt, bool forceDropYear = false)
+        public static string GetDateString(this DateTime dt, bool forceDropYear = false)
         {
             var culture = CultureInfo.CurrentCulture.DateTimeFormat;
             var format = culture.ShortDatePattern
