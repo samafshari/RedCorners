@@ -12,6 +12,7 @@ namespace RedCorners.Services
     public class BenchmarkService
     {
         public static BenchmarkService Instance { get; private set; } = new BenchmarkService();
+        public static BenchmarkService SetInstance(BenchmarkService instance) => Instance = instance;
 
         public bool IsDebug;
         public bool IsEnabled;

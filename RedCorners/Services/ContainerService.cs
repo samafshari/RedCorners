@@ -8,6 +8,9 @@ namespace RedCorners.Services
 {
     public class ContainerService
     {
+        public static ContainerService Instance { get; private set; } = new ContainerService();
+        public static ContainerService SetInstance(ContainerService instance) => Instance = instance;
+
         public ConcurrentDictionary<Type, object> Children { get; private set; }
             = new ConcurrentDictionary<Type, object>();
 

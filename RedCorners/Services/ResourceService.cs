@@ -13,6 +13,9 @@ namespace RedCorners.Services
 {
     public class ResourceService
     {
+        public static ResourceService Instance { get; private set; } = new ResourceService();
+        public static ResourceService SetInstance(ResourceService instance) => Instance = instance;
+
         readonly Dictionary<(Assembly, string), string> resourceNames = new Dictionary<(Assembly, string), string>();
         readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
 
